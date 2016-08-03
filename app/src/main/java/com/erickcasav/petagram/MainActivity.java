@@ -1,45 +1,59 @@
 package com.erickcasav.petagram;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+
+import com.erickcasav.petagram.adapter.PageAdapter;
+import com.erickcasav.petagram.fragment.MascotasListado;
+import com.erickcasav.petagram.fragment.PerfilMascota;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Mascota> mascotas;
-    private RecyclerView rvMascotas;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rvMascotas = (RecyclerView) findViewById(R.id.rvMascotaLista);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        LinearLayoutManager llmMascota = new LinearLayoutManager(this);
-        llmMascota.setOrientation(LinearLayoutManager.VERTICAL);
+        setUpViewPager();
 
-        rvMascotas.setLayoutManager(llmMascota);
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+        }
+    }
 
-        inicializarListaMscotas();
-        inicializarAdaptador();
+    private  ArrayList<Fragment> agregarFragments(){
+        ArrayList<Fragment> fragments = new ArrayList<>();
 
-        FloatingActionButton fabCamera = (FloatingActionButton)findViewById(R.id.fabCamera);
-        fabCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Foto", Toast.LENGTH_SHORT).show();
-            }
-        });
+        fragments.add(new MascotasListado());
+        fragments.add(new PerfilMascota());
+
+        return fragments;
+    }
+
+    private  void setUpViewPager(){
+        viewPager.setAdapter(new PageAdapter(getSupportFragmentManager(), agregarFragments()));
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_action_name);
     }
 
     @Override
@@ -53,40 +67,31 @@ public class MainActivity extends AppCompatActivity {
 
         switch(item.getItemId()){
             case R.id.mAbout:
-                Toast.makeText(this, "Acerca de", Toast.LENGTH_SHORT).show();
+                Intent intentDesarrollador = new Intent(this, ActivityBioDesarrollador.class);
+                startActivity(intentDesarrollador);
                 break;
-            case R.id.mSettings:
-                Toast.makeText(this, "Configuración", Toast.LENGTH_SHORT).show();
+            case R.id.mContact:
+                Intent intentContacto = new Intent(this, ActivityContacto.class);
+                startActivity(intentContacto);
                 break;
             case R.id.mavFavorites:
-                Intent intent = new Intent(this, ActivityFavoritos.class);
-                startActivity(intent);
+
+                try
+                {
+                    Intent intent = new Intent(this, ActivityFavoritos.class);
+                    startActivity(intent);
+                }
+                catch (Exception e)
+                {
+                    Log.d("Error",e.getMessage().toString());
+                }
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void inicializarAdaptador(){
-        MascotaAdaptador adaptador = new MascotaAdaptador (mascotas, this);
-        rvMascotas.setAdapter(adaptador);
-    }
 
-    private void inicializarListaMscotas()
-    {
-        mascotas = new ArrayList<Mascota>();
-
-        mascotas.add(new Mascota(1, "Javi", "5", R.drawable.mascota_1));
-        mascotas.add(new Mascota(2, "Rocky", "4", R.drawable.mascota_2));
-        mascotas.add(new Mascota(3, "Cuasi", "3", R.drawable.mascota_3));
-        mascotas.add(new Mascota(4, "Diablo", "2", R.drawable.mascota_4));
-        mascotas.add(new Mascota(5, "Gatonto", "7", R.drawable.mascota_5));
-        mascotas.add(new Mascota(6, "Rudo", "9", R.drawable.mascota_6));
-        mascotas.add(new Mascota(7, "Cursi", "22", R.drawable.mascota_7));
-        mascotas.add(new Mascota(8, "Oso", "1", R.drawable.mascota_8));
-        mascotas.add(new Mascota(9, "Princeso", "15", R.drawable.mascota_9));
-
-    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.erickcasav.petagram;
+package com.erickcasav.petagram.pojo;
 
 /**
  * Created by ejcastaneda on 21/07/2016.

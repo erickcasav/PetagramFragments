@@ -4,6 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+
+import com.erickcasav.petagram.adapter.MascotaAdaptador;
+import com.erickcasav.petagram.pojo.Mascota;
 
 import java.util.ArrayList;
 
@@ -15,20 +20,33 @@ public class ActivityFavoritos extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favoritos);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try
+        {
+            setContentView(R.layout.activity_favoritos);
 
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        rvMascotaFavoritos = (RecyclerView) findViewById(R.id.rvMascotaFavoritos);
+            Toolbar miActionBar = (Toolbar) findViewById(R.id.miActionBar);
+            setSupportActionBar(miActionBar);
 
-        LinearLayoutManager llmMascota = new LinearLayoutManager(this);
-        llmMascota.setOrientation(LinearLayoutManager.VERTICAL);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        rvMascotaFavoritos.setLayoutManager(llmMascota);
+            rvMascotaFavoritos = (RecyclerView) findViewById(R.id.rvMascotaFavoritos);
 
-        inicializarListaMscotas();
-        inicializarAdaptador();
+            LinearLayoutManager llmMascota = new LinearLayoutManager(this);
+            llmMascota.setOrientation(LinearLayoutManager.VERTICAL);
+
+            rvMascotaFavoritos.setLayoutManager(llmMascota);
+
+            inicializarListaMscotas();
+            inicializarAdaptador();
+        }
+        catch (Exception e)
+        {
+            Log.d("Error",e.getMessage().toString());
+        }
     }
 
     private void inicializarAdaptador(){
